@@ -1,7 +1,7 @@
 #include "Renderer.h"
 #include "Rand.h"
 
-void Renderer::drawCell(short x, short y, wchar_t ch, WORD color) {
+void Renderer::drawCell(short x, short y, char ch, WORD color) {
     CHAR_INFO ci;
     ci.Char.UnicodeChar = ch;
     ci.Attributes = color;

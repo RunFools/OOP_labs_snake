@@ -7,19 +7,19 @@ private:
     int x;
     int y;
     int color;
-    wchar_t ch;
+    char ch;
     CellType type;
 
 public:
-    Cell(int x, int y, int color, wchar_t ch, CellType type);
+    Cell(int x, int y, int color, char ch, CellType type);
 
     int getX() const;
     int getY() const;
     int getColor() const;
-    wchar_t getChar() const;
+    char getChar() const;
     CellType getType() const;
 
     void setColor(int color);
-    void setChar(wchar_t ch);
+    void setChar(char ch);
 
 };

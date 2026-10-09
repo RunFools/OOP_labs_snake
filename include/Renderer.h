@@ -6,7 +6,7 @@
 class Renderer {
 private:
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    void drawCell(short x, short y, wchar_t ch, WORD color);
+    void drawCell(short x, short y, char ch, WORD color);
 
 public:
     void init(HANDLE hOut);

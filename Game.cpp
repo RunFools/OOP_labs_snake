@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <stdexcept>
+#include <cstdlib>
 #include <windows.h>
 #include "Snake.h"
 #include "Renderer.h"
@@ -108,6 +109,8 @@ int main(int argc, char* argv[]) {
     }
 
     while(running) {
+        system("cls");
+
         snake.addHead(RIGHT_X, Rand::getRandInt(TOP_Y + 1, BOTTOM_Y - 1));
 
         while(snake.getSize() < snakeSize) {

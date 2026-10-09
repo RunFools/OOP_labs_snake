@@ -12,3 +12,5 @@ add_executable(snake
     Cell.cpp
     Rand.cpp
 )
+
+target_include_directories(snake PRIVATE include)

@@ -12,10 +12,10 @@ private:
     bool moveUpFlag = false;
     bool isLongEnough = false;
 
-    std::array<wchar_t, 26> letters {
-    L'A', L'B', L'C', L'D', L'E', L'F', L'G', L'H', L'I', 
-    L'J', L'K', L'L', L'M', L'N', L'O', L'P', L'Q', L'R',
-    L'S', L'T', L'U', L'V', L'W', L'X', L'Y', L'Z'
+    std::array<char, 26> letters {
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 
+    'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+    'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
 
 public:
