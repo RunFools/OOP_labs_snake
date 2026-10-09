@@ -13,4 +13,4 @@ add_executable(snake
     Rand.cpp
 )
 
-target_include_directories(snake PRIVATE include)
+target_include_directories(snake PRIVATE headers)
