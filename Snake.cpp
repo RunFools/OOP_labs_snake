@@ -3,7 +3,7 @@
 #include "CellType.h"
 #include "Rand.h"
 
-Snake::Snake() {};
+Snake::Snake(bool epileptionMode) : epileptionMode(epileptionMode) {};
 
 int Snake::getSize() const { return body.size(); }
 Cell Snake::getHead() const { return body.front(); }

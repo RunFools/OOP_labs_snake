@@ -19,7 +19,7 @@ private:
     };
 
 public:
-    Snake();
+    Snake(bool epileptionMode);
 
     int getSize() const;
     Cell getHead() const;
