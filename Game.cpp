@@ -2,6 +2,9 @@
 #include <cstring>
 #include <stdexcept>
 #include <cstdlib>
+#include <algorithm>
+#include <vector>
+#include <queue>
 #include <windows.h>
 #include "Snake.h"
 #include "Renderer.h"
@@ -14,22 +17,20 @@ struct overloaded : Ts... {
 template<class... Ts>
 overloaded(Ts...) -> overloaded<Ts...>;
 
-int LEFT_X = 0;
-int RIGHT_X = 119;
-int TOP_Y = 0;
-int BOTTOM_Y = 29;
+const int LEFT_X = 0;
+const int RIGHT_X = 119;
+const int TOP_Y = 0;
+const int BOTTOM_Y = 29;
 
-int snakeCount = 1;
-int snakeSpeed = 30;
-int snakeSize = 30;
-bool epileptionMode = false;
+const int tick = 10; //Time between two updates, ms
+
+int snakeCount;
+int snakeSpeedMs;
+int snakeSize;
+bool epileptionMode;
 
 Renderer renderer;
-
-//Sleep that depends on the snake speed
-void localSleep() {
-    Sleep(1000/snakeSpeed);
-}
+std::queue<Cell> renderQueue;
 
 //Checks the input and returns game run flag
 bool checkInput(int argc, char* argv[]) {
@@ -55,7 +56,7 @@ bool checkInput(int argc, char* argv[]) {
             if (input < lowerLimit || input > upperLimit) { throw std::invalid_argument(exceptionMessage); }
             return input;
         },
-
+        
         [](std::string exceptionMessage) {
             std::string input;
             std::cin >> input;
@@ -76,7 +77,7 @@ bool checkInput(int argc, char* argv[]) {
             try {
                 if(argc != 5) { throw std::invalid_argument("Invalid number of arguments"); }
                 snakeCount = checkInputElement(1, 1, 30, "Count out of range");
-                snakeSpeed = checkInputElement(2, 1, 30, "Speed out of range");
+                snakeSpeedMs = 1000 / checkInputElement(2, 1, 30, "Speed out of range");
                 snakeSize = checkInputElement(3, 1, 30, "Size out of range");
                 epileptionMode = checkInputElement(4, "Invalid epileption mode");
             } catch (const std::invalid_argument& e) {
@@ -90,7 +91,7 @@ bool checkInput(int argc, char* argv[]) {
             snakeCount = checkInputElement(1, 30, "Count out of range");
 
             std::cout << "Snake speed (1-30): ";
-            snakeSpeed = checkInputElement(1, 30, "Speed out of range");
+            snakeSpeedMs = 1000 / checkInputElement(1, 30, "Speed out of range");
 
             std::cout << "Snake size (1-30): ";
             snakeSize = checkInputElement(1, 30, "Size out of range");
@@ -107,40 +108,52 @@ bool checkInput(int argc, char* argv[]) {
     return true;
 }
 
-//Creates a game loop for a single snake
-void runLocalGameLoop(Snake snake) {
-    snake.addHead(RIGHT_X, Rand::getRandInt(TOP_Y + 1, BOTTOM_Y - 1));
-
-    while(snake.getSize() < snakeSize) {
-        renderer.drawSnake(snake.getHead());
-
-        localSleep();
-
-        snake.moveLeft();
+//Updates all snakes' positions and renders them every 'tick' ms
+void updateAllSnakes(std::vector<Snake>& snakes) {
+    for(Snake& snake : snakes) {
+        if(GetTickCount64() - snake.getLastMoveTimes() >= (ULONGLONG)snake.getSpeed()) {
+            snake.moveLeft(renderQueue);
+        }
     }
-    snake.setLongEnough(true);
 
-    while(snake.getSize() > 0) {
-        renderer.drawSnake(snake.getHead());
-
-        localSleep();
-
-        renderer.drawEmpty(snake.getTail());
-        snake.moveLeft(); 
-    }
-    snake.setLongEnough(false);
-}
-
-//Ties all the game loops into one
-void runGlobalGameLoop(bool running) {
-    while(running) {
-        system("cls");
-
-        runLocalGameLoop(Snake(epileptionMode));
+    while(renderQueue.size() > 0) {
+        renderer.drawCell(renderQueue.front());
+        renderQueue.pop();
     }
 }
 
+//Runs the game loop
+void run(bool running) {
+    if(!running) return;
+
+    system("cls");
+
+    std::vector<int> spawnDellays(snakeCount);
+    for(int& i : spawnDellays) {
+        i = Rand::getRandInt(0, 1000);
+    }
+    std::sort(spawnDellays.begin(), spawnDellays.end(), std::greater<int>());
+
+    std::vector<Snake> snakes;
+    bool allSnakesSpawnedFlag = false;
+    ULONGLONG start = GetTickCount64();
+    
+    while(true) {
+        if(!allSnakesSpawnedFlag && GetTickCount64() - start >= spawnDellays.back()) {
+            snakes.push_back(Snake(snakeSpeedMs, snakeSize, epileptionMode));
+            snakes.back().addHead(RIGHT_X, Rand::getRandInt(TOP_Y + 1, BOTTOM_Y - 1), renderQueue);
+            spawnDellays.pop_back();
+
+            if(spawnDellays.size() == 0) {
+                allSnakesSpawnedFlag = true;
+            }
+        }
+
+        updateAllSnakes(snakes);
+        Sleep(tick);
+    }
+}
 
 int main(int argc, char* argv[]) {
-    runGlobalGameLoop(checkInput(argc, argv));
+    run(checkInput(argc, argv));
 }

@@ -4,22 +4,22 @@
 
 class Cell {
 private:
-    int x;
-    int y;
-    int color;
+    short x;
+    short y;
+    short color;
     char ch;
     CellType type;
 
 public:
-    Cell(int x, int y, int color, char ch, CellType type);
+    Cell(short x, short y, short color, char ch, CellType type);
 
-    int getX() const;
-    int getY() const;
-    int getColor() const;
+    short getX() const;
+    short getY() const;
+    short getColor() const;
     char getChar() const;
     CellType getType() const;
 
-    void setColor(int color);
+    void setColor(short color);
     void setChar(char ch);
 
 };
