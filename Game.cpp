@@ -108,7 +108,7 @@ bool checkInput(int argc, char* argv[]) {
     return true;
 }
 
-//Updates all snakes' positions and renders them every 'tick' ms
+//Updates all snakes' positions and renders them
 void updateAllSnakes(std::vector<Snake>& snakes) {
     for(Snake& snake : snakes) {
         if(GetTickCount64() - snake.getLastMoveTimes() >= (ULONGLONG)snake.getSpeed()) {
