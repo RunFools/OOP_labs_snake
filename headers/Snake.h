@@ -4,8 +4,9 @@
 #include <deque>
 #include <array>
 #include "Cell.h"
+#include "Shape.h"
 
-class Snake {
+class Snake : private Shape {
 private:
     inline static const std::array<char, 26> letters {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 
@@ -22,6 +23,9 @@ private:
     bool moveUpFlag = false;
     bool touchedBorderFlag = false;
 
+    void drawHead();
+    void drawTail();
+
 public:
     Snake(int speed, int maxSize, bool epileptionMode);
 
@@ -34,7 +38,7 @@ public:
     void setEpileptionMode(bool epileptionMode);
     void setLongEnough(bool isLongEnough);
 
-    void addHead(int x, int y, std::queue<Cell>& renderQueue);
-    void moveLeft(std::queue<Cell>& renderQueue);
+    void addHead(int x, int y);
+    void moveLeft();
 
 };

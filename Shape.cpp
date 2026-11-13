@@ -1,7 +1,6 @@
-#include "Renderer.h"
-#include "Rand.h"
+#include "Shape.h"
 
-void Renderer::drawCell(Cell cell) {
+void Shape::drawCell(Cell cell) {
     CHAR_INFO ci;
     ci.Char.UnicodeChar = cell.getChar();
     ci.Attributes = cell.getColor();

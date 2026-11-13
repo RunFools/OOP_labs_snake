@@ -17,9 +17,17 @@ ULONGLONG Snake::getLastMoveTimes() const { return lastMoveTime; }
 Cell Snake::getHead() const { return body.front(); }
 Cell Snake::getTail() const { return body.back(); }
 
+void Snake::drawHead() {
+    drawCell(getHead());
+}
+
+void Snake::drawTail() {
+    drawCell(getTail());
+}
+
 void Snake::setEpileptionMode(bool epileptionMode) { this->epileptionMode = epileptionMode; }
 
-void Snake::addHead(int x, int y, std::queue<Cell>& renderQueue) {
+void Snake::addHead(int x, int y) {
     if(epileptionMode) {
         body.push_front(Cell(
             x,
@@ -37,32 +45,32 @@ void Snake::addHead(int x, int y, std::queue<Cell>& renderQueue) {
             CellType::Snake)
         );
     }
-    renderQueue.push(body.front());
+    drawHead();
 }
 
-void Snake::moveLeft(std::queue<Cell>& renderQueue) {
+void Snake::moveLeft() {
         if (body.front().getX() == 0) {
             touchedBorderFlag = true;
         } else {
             if (moveUpFlag) {
-                addHead(body.front().getX() - 1, body.front().getY() + 1, renderQueue);
+                addHead(body.front().getX() - 1, body.front().getY() + 1);
                 moveUpFlag = false;
             } else {
-                addHead(body.front().getX() - 1, body.front().getY() - 1, renderQueue);
+                addHead(body.front().getX() - 1, body.front().getY() - 1);
                 moveUpFlag = true;
             }
-            renderQueue.push(body.front());
+            drawHead();
         }
 
         if(touchedBorderFlag || body.size() > maxSize) {
             body.back().setChar(' ');
             body.back().setColor(0);
-            renderQueue.push(std::move(body.back()));
+            drawTail();
             body.pop_back();
         }
 
         if(body.size() == 0) {
-            addHead(RIGHT_X, Rand::getRandInt(TOP_Y + 1, BOTTOM_Y - 1), renderQueue);
+            addHead(RIGHT_X, Rand::getRandInt(TOP_Y + 1, BOTTOM_Y - 1));
             touchedBorderFlag = false;
         }
 

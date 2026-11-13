@@ -1,13 +1,11 @@
 #include <iostream>
 #include <cstring>
 #include <stdexcept>
-#include <cstdlib>
 #include <algorithm>
 #include <vector>
 #include <queue>
 #include <windows.h>
 #include "Snake.h"
-#include "Renderer.h"
 #include "Rand.h"
 
 template<class... Ts>
@@ -28,9 +26,6 @@ int snakeCount;
 int snakeSpeedMs;
 int snakeSize;
 bool epileptionMode;
-
-Renderer renderer;
-std::queue<Cell> renderQueue;
 
 //Checks the input and returns game run flag
 bool checkInput(int argc, char* argv[]) {
@@ -112,13 +107,8 @@ bool checkInput(int argc, char* argv[]) {
 void updateAllSnakes(std::vector<Snake>& snakes) {
     for(Snake& snake : snakes) {
         if(GetTickCount64() - snake.getLastMoveTimes() >= (ULONGLONG)snake.getSpeed()) {
-            snake.moveLeft(renderQueue);
+            snake.moveLeft();
         }
-    }
-
-    while(renderQueue.size() > 0) {
-        renderer.drawCell(renderQueue.front());
-        renderQueue.pop();
     }
 }
 
@@ -141,7 +131,7 @@ void run(bool running) {
     while(true) {
         if(!allSnakesSpawnedFlag && GetTickCount64() - start >= spawnDellays.back()) {
             snakes.push_back(Snake(snakeSpeedMs, snakeSize, epileptionMode));
-            snakes.back().addHead(RIGHT_X, Rand::getRandInt(TOP_Y + 1, BOTTOM_Y - 1), renderQueue);
+            snakes.back().addHead(RIGHT_X, Rand::getRandInt(TOP_Y + 1, BOTTOM_Y - 1));
             spawnDellays.pop_back();
 
             if(spawnDellays.size() == 0) {

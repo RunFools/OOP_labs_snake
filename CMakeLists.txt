@@ -8,8 +8,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(snake
     Game.cpp
+    Shape.cpp
     Snake.cpp
-    Renderer.cpp
     Cell.cpp
     Rand.cpp
 )

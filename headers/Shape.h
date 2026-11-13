@@ -1,12 +1,12 @@
 #pragma once
 
 #include <windows.h>
-#include "Snake.h"
+#include "Cell.h"
 
-class Renderer {
+class Shape {
 private:
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-public:
+protected:
     void drawCell(Cell cell);
 };
